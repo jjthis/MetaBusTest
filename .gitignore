@@ -4,7 +4,7 @@ node_modules
 react_project/node_modules
 react_project/.pnp
 react_project/.pnp.js
-
+.idea
 # testing
 react_project/coverage
 
