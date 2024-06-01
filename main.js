@@ -21,6 +21,7 @@ var chat = io.of('/chat').on('connection', function (socket) {
         // chat.all.emit('response',data);
         socket.broadcast.emit('response', data);
     });
+    ////hi
 });
 server.listen(8080, function () {
     console.log('Socket IO server listening on port ');
