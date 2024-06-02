@@ -1,0 +1,9 @@
+cd ./react_project
+npm run build
+cd ../
+node main
+
+
+
+cd ./react_project
+npm start

@@ -8,9 +8,38 @@ app.use(express.static(path.join(__dirname, 'react_project/build')));
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '/react-project/build/index.html'));
 });
+let joinList=[];
+let pos={};
+let vec={};
+
+const rl = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  
+  rl.on('line', (line) => {
+    try{
+        console.log(eval(line)+"");
+
+    }catch(e){
+        console.log(e+"");
+    }
+    //rl.close();
+  }).on('close', () => {
+    //process.exit();
+  });
+
 var chat = io.of('/chat').on('connection', function (socket) {
+    let myId;
     socket.on('chat message', function (data) {
         console.log('message from client: ', data);
+        pos[data.id]=data.now;
+        vec[data.id]=data.vec;
+        if(data.type === 'join new'){
+            myId=data.id;
+            joinList.push(data.id);
+            socket.emit('response', {type:'init',list:joinList,posObject:pos,vecObject:vec});
+        }
         // var name = socket.name = data.name;
         // var room = socket.room = data.room;
         //
@@ -21,6 +50,11 @@ var chat = io.of('/chat').on('connection', function (socket) {
         // chat.all.emit('response',data);
         socket.broadcast.emit('response', data);
     });
+    socket.on('disconnect', () => {
+        socket.broadcast.emit('response', {type:'disconnected', id:myId});
+        //joinList.splice(joinList.indexOf(myId), 1);
+        console.log("discon "+myId);
+      });
     ////hi
 });
 server.listen(8080, function () {
