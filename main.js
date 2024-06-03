@@ -30,13 +30,13 @@ const rl = require('readline').createInterface({
   });
 
 var chat = io.of('/chat').on('connection', function (socket) {
-    let myId;
+    //let myId;
     socket.on('chat message', function (data) {
         console.log('message from client: ', data);
         pos[data.id]=data.now;
         vec[data.id]=data.vec;
         if(data.type === 'join new'){
-            myId=data.id;
+            socket.myId=data.id;
             joinList.push(data.id);
             socket.emit('response', {type:'init',list:joinList,posObject:pos,vecObject:vec});
         }
@@ -51,9 +51,10 @@ var chat = io.of('/chat').on('connection', function (socket) {
         socket.broadcast.emit('response', data);
     });
     socket.on('disconnect', () => {
-        socket.broadcast.emit('response', {type:'disconnected', id:myId});
-        //joinList.splice(joinList.indexOf(myId), 1);
-        console.log("discon "+myId);
+        socket.broadcast.emit('response', {type:'disconnected', id:socket.myId});
+        console.log("discon "+socket.myId);
+        if(joinList.indexOf(socket.myId)==-1)return;
+        joinList.splice(joinList.indexOf(socket.myId), 1);
       });
     ////hi
 });

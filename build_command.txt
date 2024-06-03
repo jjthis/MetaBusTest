@@ -7,3 +7,10 @@ node main
 
 cd ./react_project
 npm start
+
+
+
+npm install -g n
+sudo n lts
+sudo n latest
+sudo n prune
