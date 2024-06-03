@@ -14,3 +14,7 @@ npm install -g n
 sudo n lts
 sudo n latest
 sudo n prune
+
+git add .
+git commit -m 'hi'
+git push

@@ -81,7 +81,9 @@ function ChatView(props) {
                 for (let j = 0; j < data.list.length; j++) {
                     ballArr[data.list[j]] = new Ball(data.list[j]);
                     animationShow(data.list[j]);
-                } isInitialize = true;
+                }
+                isInitialize = true;
+                console.log("isInitialized");
             } else if (data.type === 'disconnected') {
                 let tmp = [...userList];
                 if (tmp.indexOf(data.id) == -1) return;
@@ -101,7 +103,7 @@ function ChatView(props) {
             time: (new Date()).toLocaleString().toString()
         });
         const handleKeyDown = (e) => {
-            if (isInitialize) return;
+            if (!isInitialize) return;
             // 키보드 이벤트 처리
             let isPressed = true;
             if (e.key === 'ArrowRight') {
@@ -128,7 +130,7 @@ function ChatView(props) {
                 sendMovement();
             }
         }; const handleKeyUp = (e) => {
-            if (isInitialize) return;
+            if (!isInitialize) return;
             // 키보드 이벤트 처리
             let isPressed = true;
             if (e.key === 'ArrowRight') {
@@ -171,8 +173,9 @@ Ball.prototype.step = function (timestamp) {
     }
     let progress = timestamp - this.pre;
     this.pre = timestamp;
-    pos[ids][0] += (aniOver[ids][0] + aniOver[ids][1]) * Math.min(progress, 2000);
-    pos[ids][1] += (aniOver[ids][2] + aniOver[ids][3]) * Math.min(progress, 2000);
+    pos[ids][0] += (aniOver[ids][0] + aniOver[ids][1]) * progress;
+    pos[ids][1] += (aniOver[ids][2] + aniOver[ids][3]) * progress;
+
     element.style.left = pos[ids][0] + "px";
     element.style.top = pos[ids][1] + "px";
     if (aniOver[ids][0] || aniOver[ids][1] || aniOver[ids][2] || aniOver[ids][3]) {
@@ -185,7 +188,7 @@ Ball.prototype.step = function (timestamp) {
 
 function animationShow(ids) {
 
-    if (!isInitialize) return;
+    if (!isInitialize && ids == id) return;
 
     if (isRun[ids]) return;
     isRun[ids] = true;
